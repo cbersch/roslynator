@@ -1,11 +1,13 @@
 ﻿// Copyright (c) .NET Foundation and Contributors. Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Immutable;
+using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Roslynator.CSharp;
+using Roslynator.CSharp.Analysis;
 using Roslynator.CSharp.CodeStyle;
 
 namespace Roslynator.Formatting.CSharp;
@@ -36,18 +38,11 @@ public sealed class PutExpressionBodyOnItsOwnLineAnalyzer : BaseDiagnosticAnalyz
     private static void AnalyzeArrowExpressionClause(SyntaxNodeAnalysisContext context)
     {
         var arrowExpressionClause = (ArrowExpressionClauseSyntax)context.Node;
+        AnalyzerConfigOptions configOptions = context.GetConfigOptions();
 
-        switch (arrowExpressionClause.Parent.Kind())
+        if (ConvertExpressionBodyAnalysis.BreakExpressionOnNewLine(arrowExpressionClause.Parent.Kind(), configOptions))
         {
-            case SyntaxKind.MethodDeclaration:
-            case SyntaxKind.ConstructorDeclaration:
-            case SyntaxKind.DestructorDeclaration:
-            case SyntaxKind.PropertyDeclaration:
-            case SyntaxKind.IndexerDeclaration:
-            case SyntaxKind.OperatorDeclaration:
-            case SyntaxKind.ConversionOperatorDeclaration:
-                AnalyzeArrowExpressionClause(arrowExpressionClause.ArrowToken, context);
-                break;
+            AnalyzeArrowExpressionClause(arrowExpressionClause.ArrowToken, context);
         }
     }
 
