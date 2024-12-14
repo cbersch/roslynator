@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Roslynator.CSharp.Analysis;
+
 internal static class ConvertExpressionBodyAnalysis
 {
     public static bool BreakExpressionOnNewLine(SyntaxKind syntaxKind, AnalyzerConfigOptions configOptions)
@@ -23,7 +24,6 @@ internal static class ConvertExpressionBodyAnalysis
             case SyntaxKind.OperatorDeclaration:
             case SyntaxKind.ConversionOperatorDeclaration:
                 return true;
-
             default:
                 return false;
         }
